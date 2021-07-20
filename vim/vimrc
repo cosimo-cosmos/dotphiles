@@ -1,28 +1,166 @@
-"
-" dotphiles : https://github.com/dotphiles/dotphiles
-"
-" Setup vim and load required plugins before dotvim
-"
-" Authors:
-"   Ben O'Hara <bohara@gmail.com>
-"
+set shell=/bin/zsh
+ 
+set nocompatible              " be iMproved, required
+filetype off                  " required
+ 
+" set the runtime path to include Vundle and initialize
+  set rtp+=~/.vim/bundle/Vundle.vim
+  call vundle#begin('~/.vim/bundle')
+" alternatively, pass a path where Vundle should install plugins
+" call vundle#begin('~/some/path/here')
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'Valloric/YouCompleteMe'
+ 
+" The following are examples of different formats supported.
+" Keep Plugin commands between vundle#begin/end.
+" plugin on GitHub repo
+    " All of your Plugins must be added before the following line
+    call vundle#end() 
 
-" Call dotvim
-source ~/.vim/dotvim.vim
 
-if has("user_commands")
-  set nocompatible
-  filetype off
-  set rtp+=~/.vim/bundle/vundle/
-  call vundle#rc()
-  "let g:vundles=['general', 'git', 'hg', 'programming', 'completion', 'ruby', 'python', 'misc']
-  let g:vundles=['general', 'programming']
-  let g:neocomplcache_enable_at_startup = 1
-  " Load 'vundles'
-  source ~/.vim/vundles.vim
-  " Add extra bundles here...
-  " Bundle 'reponame'
-endif
+    set number
+    set relativenumber
+    set smartindent
+    set shiftwidth=4
+    set colorcolumn=80
+    set ruler
+    set nowrap
+    set noswapfile
+    set list
+    set listchars=tab:>-
+    set listchars+=space:.
+    set nobackup
+    set undodir=~/.vim/undodir
+    set undofile
+    set incsearch
+    set clipboard=unnamedplus
 
-" Customize to your needs...
+    set noerrorbells visualbell t_vb=
+    if has('autocmd')
+      autocmd GUIEnter * set visualbell t_vb=
+    endif
 
+    set mouse=a
+    set splitbelow splitright
+
+
+    call plug#begin('~/.vim/plugged')
+
+    Plug 'morhetz/gruvbox'
+    Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+    Plug 'junegunn/fzf.vim'
+    Plug 'jremmen/vim-ripgrep' 
+    Plug 'tpope/vim-fugitive'
+    Plug 'vim-utils/vim-man'
+    Plug 'lyuts/vim-rtags' 
+    Plug 'mbbill/undotree'
+    Plug 'vim-syntastic/syntastic'
+    Plug 'alexandregv/norminette-vim'
+    Plug 'tpope/vim-surround'
+    Plug 'tpope/vim-repeat'
+    Plug 'tpope/vim-commentary'
+    Plug 'kana/vim-textobj-user'
+    Plug 'kana/vim-textobj-entire'
+    Plug 'kana/vim-textobj-indent'
+    Plug 'christoomey/vim-system-copy'
+    Plug 'vim-scripts/ReplaceWithRegister'
+    Plug 'jiangmiao/auto-pairs' 
+    call plug#end()
+
+    colorscheme gruvbox
+    set background=dark
+
+    if executable('rg')
+	    let g:rg_derive_root='true' 
+    endif
+
+    let mapleader = " "
+    let g:netrw_browse_split=2 
+    let g:netrw_banner = 0
+    let g:netrw_winsize = 25
+
+
+     """
+     "norminette
+    " Enable norminette-vim (and gcc)
+    let g:syntastic_c_checkers = ['norminette', 'gcc']
+    let g:syntastic_aggregate_errors = 1
+
+    " Set the path to norminette (do no set if using norminette of 42 mac)
+    let g:syntastic_c_norminette_exec = '~/.norminette/norminette.rb'
+
+    " Support headers (.h)
+    let g:c_syntax_for_h = 1
+    let g:syntastic_c_include_dirs = ['include', '../include', '../../include', 'libft', '../libft/include', '../../libft/include']
+
+    " Pass custom arguments to norminette (this one ignores 42header)
+    let g:syntastic_c_norminette_args = '-R CheckTopCommentHeader'
+
+    " Check errors when opening a file (disable to speed up startup time)
+    let g:syntastic_check_on_open = 1
+
+    " Enable error list
+    let g:syntastic_always_populate_loc_list = 1
+
+" Automatically open error list
+let g:syntastic_auto_loc_list = 1
+
+" Skip check when closing
+let g:syntastic_check_on_wq = 0
+
+
+
+
+"fzf
+
+nnoremap <C-p> :Files<CR>
+nnoremap <C-o> :Buffers<CR>
+nnoremap <C-g> :GFiles<CR>
+nnoremap <C-f> :Rg  
+
+
+nnoremap <leader>h :wincmd h<CR>
+nnoremap <leader>j :wincmd j<CR>
+nnoremap <leader>k :wincmd k<CR>
+nnoremap <leader>l :wincmd l<CR>
+nnoremap <leader>h :wincmd h<CR>
+nnoremap <leader>u :UndotreeShow<CR>
+nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
+nnoremap <leader>ps :Rg<SPACE> 
+nnoremap <silent> <Leader>+ :vertical resize +5<CR> 
+nnoremap <silent> <Leader>- :vertical resize -5<CR> 
+"YCM
+nnoremap <silent> <Leader>gd :YcmCompleter GoTo<CR> 
+nnoremap <silent> <Leader>gr :YcmCompleter fixIt<CR>
+
+" Saving quicker
+" Normal mode
+nnoremap ;w :w<cr>
+" Insert mode: Ctrl-S
+inoremap <C-S> <Esc>:w<cr>i
+
+"NERDTree
+map <F2> :NERDTreeToggle<CR>
+
+
+" vim-powered terminal in split window
+map <Leader>t :wa \| vertical botright term ++close<cr>
+tmap <Leader>t <c-w>:term ++close<cr>
+
+" vim-powered terminal in new tab
+ map <Leader>T :tab term ++close<cr>
+ tmap <Leader>T <c-w>:tab term ++close<cr>
+
+ "yank clipboard
+ 
+function Osc52Yank()
+    let buffer=system('base64 -w0', @0)
+    let buffer='\e]52;c;'.buffer.'\e\'
+    silent exe "!echo -ne".shellescape(buffer)." > ".shellescape(g:tty)
+endfunction 
+
+augroup Yank
+    autocmd!
+    autocmd TextYankPost * if v:event.operator ==# 'y' | call Osc52Yank() | endif
+augroup END
